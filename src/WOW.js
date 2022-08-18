@@ -146,6 +146,7 @@ export default class WOW {
     callback: null,
     scrollContainer: null,
     resetAnimation: true,
+    orderDuration: 200,
   };
 
   constructor(options = {}) {
@@ -268,8 +269,9 @@ export default class WOW {
     const duration = box.getAttribute('data-wow-duration');
     const delay = box.getAttribute('data-wow-delay');
     const iteration = box.getAttribute('data-wow-iteration');
+    const order = box.getAttribute('data-wow-order');
 
-    return this.animate(() => this.customStyle(box, hidden, duration, delay, iteration));
+    return this.animate(() => this.customStyle(box, hidden, duration, delay, iteration, order));
   }
 
   animate = (function animateFactory() {
@@ -294,11 +296,15 @@ export default class WOW {
     }
   }
 
-  customStyle(box, hidden, duration, delay, iteration) {
+  customStyle(box, hidden, duration, delay, iteration, order) {
     if (hidden) { this.cacheAnimationName(box); }
     box.style.visibility = hidden ? 'hidden' : 'visible';
-
     if (duration) { this.vendorSet(box.style, { animationDuration: duration }); }
+    if (order) {
+      const dur = this.config.orderDuration * order;
+      this.vendorSet(box.style,
+        { animationDuration: `${dur}ms` });
+    }
     if (delay) { this.vendorSet(box.style, { animationDelay: delay }); }
     if (iteration) { this.vendorSet(box.style, { animationIterationCount: iteration }); }
     this.vendorSet(box.style, { animationName: hidden ? 'none' : this.cachedAnimationName(box) });

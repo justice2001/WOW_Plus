@@ -63,9 +63,9 @@
   }
 
   function createEvent(event) {
-    var bubble = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-    var cancel = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-    var detail = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+    var bubble = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var cancel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var detail = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
     var customEvent = void 0;
     if (document.createEvent != null) {
@@ -208,7 +208,7 @@
 
   var WOW = function () {
     function WOW() {
-      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       _classCallCheck(this, WOW);
 
@@ -220,7 +220,8 @@
         live: true,
         callback: null,
         scrollContainer: null,
-        resetAnimation: true
+        resetAnimation: true,
+        orderDuration: 200
       };
 
       this.animate = function animateFactory() {
@@ -370,9 +371,10 @@
         var duration = box.getAttribute('data-wow-duration');
         var delay = box.getAttribute('data-wow-delay');
         var iteration = box.getAttribute('data-wow-iteration');
+        var order = box.getAttribute('data-wow-order');
 
         return this.animate(function () {
-          return _this2.customStyle(box, hidden, duration, delay, iteration);
+          return _this2.customStyle(box, hidden, duration, delay, iteration, order);
         });
       }
     }, {
@@ -394,14 +396,17 @@
       }
     }, {
       key: 'customStyle',
-      value: function customStyle(box, hidden, duration, delay, iteration) {
+      value: function customStyle(box, hidden, duration, delay, iteration, order) {
         if (hidden) {
           this.cacheAnimationName(box);
         }
         box.style.visibility = hidden ? 'hidden' : 'visible';
-
         if (duration) {
           this.vendorSet(box.style, { animationDuration: duration });
+        }
+        if (order) {
+          var dur = this.config.orderDuration * order;
+          this.vendorSet(box.style, { animationDuration: dur + 'ms' });
         }
         if (delay) {
           this.vendorSet(box.style, { animationDelay: delay });
