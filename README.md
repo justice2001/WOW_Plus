@@ -1,49 +1,52 @@
-# WOW.js [![Build Status](https://secure.travis-ci.org/graingert/WOW.svg?branch=master)](http://travis-ci.org/graingert/WOW)
+# WOW.js 增强版
 
-Temporary deprecation:
-======================
+Language: [中文](README.md) | [English](README.en.md)
 
-wow.js is temporarily deprecated in favour of AOS (Animate on Scroll). Feel free to ignore the warning if you can't use AOS.
+[Forked From Github graingert/WOW](https://github.com/graingert/wow)
 
-Plans for 3.0 include:
+# ⚠ 原项目已经废弃
 
-* Breaking out the shims into an optional module
-* Using the AOS approach for most functionality
-* Remain completely backwards compatible and a drop-in replacement for GPL wowjs, but issue warning on durations of higher granularity than 50ms
-or longer than 3s
-* Detect Firefox for Android as mobile.
+本项目为山东远山科技有限公司为特殊需求修改的增强版，不建议个人项目使用，原项目建议使用[AOS](https://github.com/michalsnik/aos)进行替代
 
+---
 
-Reveal CSS animation as you scroll down a page.
-By default, you can use it to trigger [animate.css](https://github.com/daneden/animate.css) animations.
-But you can easily change the settings to your favorite animation library.
+根据页面滚动展示css动画, WOW.js Plus 在原项目的基础上增加了部分功能，以适配某些特殊场景使用。
 
-Advantages:
-- 100% MIT Licensed, not GPL keep your code yours.
-- Naturally Caffeine free
-- Smaller than other JavaScript parallax plugins, like Scrollorama (they do fantastic things, but can be too heavy for simple needs)
-- Super simple to install, and works with animate.css, so if you already use it, that will be very fast to setup
-- Fast execution and lightweight code: the browser will like it ;-)
-- You can change the settings - [see below](#advanced-usage)
-
-### [LIVE DEMO ➫](https://graingert.co.uk/WOW/)
-
-## Live examples
-- [MaterialUp](http://www.materialup.com)
-- [Fliplingo](https://www.fliplingo.com)
-- [Streamline Icons](http://www.streamlineicons.com)
-- [Microsoft Stories](http://www.microsoft.com/en-us/news/stories/garage/)
+### [在线预览 (原项目官网) ➫](https://graingert.co.uk/WOW/)
 
 
-## Documentation
+## 使用文档
 
-It just take seconds to install and use WOW.js!
-[Read the documentation ➫](https://graingert.co.uk/WOW/docs.html)
+### 增强版功能
 
-### Dependencies
+#### 动画展示顺序
+
+使用数字来定义动画展示的顺序，并且可以通过配置修改展示间隔
+
+- Demo
+
+```html
+<section class="animation__animated animation__fadeIn wow" data-wow-order="1"></section>
+<section class="animation__animated animation__fadeIn wow" data-wow-order="2"></section>
+<section class="animation__animated animation__fadeIn wow" data-wow-order="3"></section>
+```
+
+上述案例可以将三个模块顺序加入动画展示
+
+- 配置间隔
+
+```js
+new WOW({
+  orderDuration: 400
+}).init()
+```
+
+修改动画间隔为400ms
+
+### 依赖的库
 - [animate.css](https://github.com/daneden/animate.css)
 
-### Installation
+### 安装方式
 
 - Bower
 
@@ -57,13 +60,13 @@ It just take seconds to install and use WOW.js!
    npm install wow.js
 ```
 
-### Basic usage
+### 快速开始
 
 - HTML
 
 ```html
-  <section class="wow slideInLeft"></section>
-  <section class="wow slideInRight"></section>
+  <section class="wow animate__animated animate__slideInLeft"></section>
+  <section class="wow animate__animated animate__slideInRight"></section>
 ```
 
 - JavaScript
@@ -72,13 +75,15 @@ It just take seconds to install and use WOW.js!
 new WOW().init();
 ```
 
-### Advanced usage
+### 高级使用方式
 
 - HTML
 
 ```html
-  <section class="wow slideInLeft" data-wow-duration="2s" data-wow-delay="5s"></section>
-  <section class="wow slideInRight" data-wow-offset="10"  data-wow-iteration="10"></section>
+  <section class="wow animate__animated animate__slideInLeft" data-wow-duration="2s" data-wow-delay="5s"></section>
+  <section class="wow animate__animated animate__slideInRight" data-wow-offset="10"  data-wow-iteration="10"></section>
+  <section class="wow animate__animated animate__slideInRight" data-wow-order="1"  data-wow-iteration="10"></section>
+  <section class="wow animate__animated animate__slideInRight" data-wow-order="2"  data-wow-iteration="10"></section>
 ```
 
 - JavaScript
@@ -86,70 +91,26 @@ new WOW().init();
 ```javascript
 var wow = new WOW(
   {
-    boxClass:     'wow',      // animated element css class (default is wow)
-    animateClass: 'animated', // animation css class (default is animated)
-    offset:       0,          // distance to the element when triggering the animation (default is 0)
-    mobile:       true,       // trigger animations on mobile devices (default is true)
-    live:         true,       // act on asynchronously loaded content (default is true)
+    boxClass:     'wow',      // 应用wow的class
+    animateClass: 'animated', // 动画加载的类属性
+    offset:       0,          // 触发动画的距离 默认为0
+    mobile:       true,       // 在移动设备上应用触发器 (默认开启)
+    live:         true,       // 异步加载内容 (默认开启)
     callback:     function(box) {
-      // the callback is fired every time an animation is started
-      // the argument that is passed in is the DOM node being animated
+      // Callback  将会在每次动画执行时运行
     },
-    scrollContainer: null,    // optional scroll container selector, otherwise use window,
-    resetAnimation: true,     // reset animation on end (default is true)
+    scrollContainer: null,    // 手动选择滚器， null时为监听window
+    resetAnimation: true,     // 在最后重置动画 (默认开启)
+    orderDuration: 200,       // 排序展示动画间隔
   }
 );
 wow.init();
 ```
 
-### Asynchronous content support
+## 开发者
 
-In IE 10+, Chrome 18+ and Firefox 14+, animations will be automatically
-triggered for any DOM nodes you add after calling `wow.init()`. If you do not
-like that, you can disable this by setting `live` to `false`.
+原开发者为Matthieu Aussaguel, [mynameismatthieu.com](http://mynameismatthieu.com)
 
-If you want to support older browsers (e.g. IE9+), as a fallback, you can call
-the `wow.sync()` method after you have added new DOM elements to animate (but
-`live` should still be set to `true`). Calling `wow.sync()` has no side
-effects.
+[Thomas Grainger](https://graingert.co.uk)进行二次维护，并于2016年启用
 
-
-## Contribute
-
-The library is transpiled using Babel, please update `wow.js` file.
-
-We use grunt to compile and minify the library:
-
-Install needed libraries
-
-```
-npm install
-```
-
-Get the compilation running in the background
-
-```
-grunt watch
-```
-
-Enjoy!
-
-## Bug tracker
-
-If you find a bug, please report it [here on Github](https://github.com/graingert/WOW/issues)!
-
-## Developer
-
-Originally Developed by Matthieu Aussaguel, [mynameismatthieu.com](http://mynameismatthieu.com)
-Forked to remain under the MIT license by Thomas Grainger, https://graingert.co.uk
-
-+ [Github Profile](//github.com/graingert)
-
-## Contributors
-
-Thanks to everyone who has contributed to the project so far:
-
-- Attila Oláh - [@attilaolah](//twitter.com/attilaolah) - [Github Profile](//github.com/attilaolah)
-- [and many others](//github.com/graingert/WOW/graphs/contributors)
-
-Initiated and designed by [Vincent Le Moign](//www.webalys.com/), [@webalys](//twitter.com/webalys)
+增强版为山东远山数字科技有限公司维护
